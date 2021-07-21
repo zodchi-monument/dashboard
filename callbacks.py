@@ -29,7 +29,7 @@ def main_graph(model):
                             line=dict(color=px.colors.qualitative.Prism[1], width=2, dash='dot', shape='hv'),
                             name='Фактическое по модели')
 
-    fig = go.Figure(layout=go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)'))
+    fig = go.Figure(layout=go.Layout(paper_bgcolor='rgba(0,0,0,0.1)',plot_bgcolor='rgba(0,0,0,0)', height=300))
     fig.add_trace(fact_trace)
     fig.add_trace(plan_trace)
     fig.add_trace(load_trace)
@@ -47,12 +47,12 @@ def mape_graph(model):
     small_pie = go.Pie(labels=["","Факт", "Дельта"], values=[0, 1.1234, 0.11], hole=.8,
                        domain={'x': [0.1, 0.9], 'y': [0.1, 0.9]},)
 
-    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)'))
+    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)', height=300))
     fig.add_trace(fact_pie)
     fig.add_trace(small_pie)
     fig.update_traces(textinfo='none', marker=dict(colors=[px.colors.qualitative.Prism[0],
                                                            px.colors.qualitative.Prism[1],
-                                                           px.colors.qualitative.Prism[6]]))
+                                                           px.colors.qualitative.Prism[3]]))
 
     fig.update_layout(showlegend=False,
                       font_color="white",
@@ -62,7 +62,7 @@ def mape_graph(model):
                             x=0.5, y=0.6, showarrow=False, text="Факт: 27.2341",))
     fig.add_annotation(dict(font=dict(color=px.colors.qualitative.Prism[1], size=14),
                             x=0.5, y=0.5, showarrow=False, text="План: 26.3348", ))
-    fig.add_annotation(dict(font=dict(color=px.colors.qualitative.Prism[6], size=14),
+    fig.add_annotation(dict(font=dict(color=px.colors.qualitative.Prism[3], size=14),
                             x=0.5, y=0.4, showarrow=False, text="MAPE: 1.9214%", ))
     return fig
 
@@ -75,7 +75,7 @@ def feature_graph(tags):
     date_end = date_now + datetime.timedelta(hours=71)
     timeline = [i for i in pd.date_range(start=date_start, end=date_end, freq='1H')]
 
-    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)'))
+    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0.1)', plot_bgcolor='rgba(0,0,0,0)', height=200))
     for t in tags:
         mock_data = list(np.random.random(72))
         mock_data = mock_data + [np.mean(mock_data)] * 71
@@ -93,14 +93,14 @@ def feature_graph(tags):
     return fig
 
 def factor_graph(tags):
-    trace = go.Waterfall(measure=["relative", "relative", "total", "relative", "relative", "total","relative", "relative", "total", "relative", "relative", "total"],
-                         x=["Sales", "Consulting", "Net revenue", "Purchases", "Other expenses", "Profit before tax","Sales1", "Consulting1", "Net revenue1", "Purchases1", "Other expenses1", "Profit 1before tax"],
-                         y=[60, 80, 0, -40, -20, 0,60, 80, 0, -40, -20, 0],
+    trace = go.Waterfall(measure=["relative", "relative", "total", "relative", "relative", "relative", "relative", "total", "relative", "relative", "total", "relative", "relative", "total"],
+                         x=["Sales", "Consulting", "Net revenue", "Purchases", "Test", "Test1", "Other expenses", "Profit before tax","Sales1", "Consulting1", "Net revenue1", "Purchases1", "Other expenses1", "Profit 1before tax"],
+                         y=[60, 80, 0, -40 , 40, 50, -20, 0, 60, 80, 0, -40, -20, 0],
                          increasing={"marker": {"color": px.colors.qualitative.Prism[0]}},
                          decreasing={"marker": {"color": px.colors.qualitative.Prism[1]}},
                          totals ={"marker": {"color": px.colors.qualitative.Prism[3]}},)
 
-    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)'))
+    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0.1)',plot_bgcolor='rgba(0,0,0,0)', height=200))
     fig.add_trace(trace)
 
     fig.update_xaxes(showgrid=False, zeroline=False)
