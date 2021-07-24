@@ -3,17 +3,24 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from datetime import date
 
-features = ['feature1','feature2','feature3','feature4','feature5','feature6','feature7','feature8','feature9',
-            'feature10','feature11','feature12','feature13','feature14','feature15','feature16','feature17']
+controlledf = ["Pressure:P111",  "Consumption:F4", "Consumption:F5", "Temperature:T11", "Temperature:T12",
+               "Temperature:T13", "Temperature:T14", "Temperature:T15", "Consumption:F1", "Consumption:F2",
+               "Pressure:P112", "Pressure:P113", "Pressure:P114", "Pressure:P115", "Consumption:F3",]
+manipulated = ["Meteo:T1 [°C]", "Meteo:T2 [°C]", "Meteo:P [mm Hg]", "Meteo:V1 [m/sec]", "Meteo:V2 [m/sec]",
+               "Meteo:NV:Avarage"]
+
+features = controlledf + manipulated
+
 predictors = [{"label": i, "value": i} for i in features]
 manufactures = ["Производство №1"]
 plant = ["Установка №1"]
-models = ["Потребление топлива"]
+models = ["Потребление топлива", "Потребление тепла", "Выработка тепла"]
+
 
 main_dash = html.Div([
         dbc.Row(
             [
-                dbc.Col(html.H4(children='Main Dashboard:',style={'text-decoration': 'underline'}), width=1.5),
+                dbc.Col(html.H4(children='Main Dashboard:',style={'text-decoration': 'underline'}), width=2),
                 dbc.Col(
                     dcc.Dropdown(id='manufacture-drop', multi=False, options=[{"label": i, "value": i} for i in manufactures],
                                  style={'color': '#212121', 'background-color': '#212121'}), width=2),
@@ -23,6 +30,9 @@ main_dash = html.Div([
                 dbc.Col(
                     dcc.Dropdown(id='main-drop', multi=False, options=[{"label": i, "value": i} for i in models],
                                  style={'color': '#212121', 'background-color': '#212121'}), width=3),
+                dbc.Col(
+                    dcc.Slider(min=1, max=4, marks={1:"Hour", 2:"Day", 3:"Month", 4:"Year"}, value=1), width=4),
+
             ], style={'padding': '20px'}),
         dbc.Row(
             [
