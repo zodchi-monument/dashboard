@@ -18,6 +18,21 @@ models = ["Потребление топлива", "Потребление те�
 
 
 main_dash = html.Div([
+        html.Div(dcc.Upload(id='upload-data',
+        children=html.Div([
+            'Drag and Drop your data file or ',
+            html.A('Select Files')
+        ]),
+        style={
+            'width': '98%',
+            'height': '40px',
+            'lineHeight': '40px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        }),),
         dbc.Row(
             [
                 dbc.Col(html.H4(children='Main Dashboard:',style={'text-decoration': 'underline'}), width=2),
@@ -36,8 +51,8 @@ main_dash = html.Div([
             ], style={'padding': '20px'}),
         dbc.Row(
             [
-            dbc.Col(dcc.Graph(id='main-graph', figure={'layout': {'height': 250}}), width=10),
-            dbc.Col(dcc.Graph(id='mape-graph', figure={'layout': {'height': 250}}), width=2)
+            dbc.Col(dcc.Graph(id='main-graph', figure={'layout': {'height': 220}}), width=10),
+            dbc.Col(dcc.Graph(id='mape-graph', figure={'layout': {'height': 220}}), width=2)
             ]
         )
 ])
@@ -48,7 +63,7 @@ feature_dash = html.Div([
             dbc.Col(
                 [
                     dbc.Row(html.H4(children='Features graph:',style={'text-decoration': 'underline'}), style={'padding': '20px'}),
-                    dcc.Graph(id='features-graph', figure={'layout': {'height': 200}})
+                    dcc.Graph(id='features-graph', figure={'layout': {'height': 190}})
                 ],
                 width=10),
             dbc.Col(
