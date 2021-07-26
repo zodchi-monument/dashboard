@@ -1,7 +1,19 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from datetime import date
+import yaml
+import glob
+
+
+objects_dict = {}
+for g in glob.glob("./init_files/*.yaml"):
+    with open(g, "r") as f:
+        manufactures, plant = g.split("/")[-1].split(".")[0].split("_")
+        conf = yaml.load(f.read())
+        models = {}
+        for k in conf:
+            models[k] = conf[k]["tags"]["input"]
+        objects_dict[manufactures] = {plant:models}
 
 controlledf = ["Pressure:P111",  "Consumption:F4", "Consumption:F5", "Temperature:T11", "Temperature:T12",
                "Temperature:T13", "Temperature:T14", "Temperature:T15", "Consumption:F1", "Consumption:F2",
@@ -10,34 +22,25 @@ manipulated = ["Meteo:T1 [°C]", "Meteo:T2 [°C]", "Meteo:P [mm Hg]", "Meteo:V1 
                "Meteo:NV:Avarage"]
 
 features = controlledf + manipulated
-
 predictors = [{"label": i, "value": i} for i in features]
-manufactures = ["Производство №1"]
+manufactures = objects_dict.keys()
 plant = ["Установка №1"]
 models = ["Потребление топлива", "Потребление тепла", "Выработка тепла"]
 
 
 main_dash = html.Div([
-        html.Div(dcc.Upload(id='upload-data',
-        children=html.Div([
-            'Drag and Drop your data file or ',
-            html.A('Select Files')
-        ]),
-        style={
-            'width': '98%',
-            'height': '40px',
-            'lineHeight': '40px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        }),),
+        html.Div(
+            dcc.Upload(id='upload-data',
+                       children=html.Div(['Drag and Drop your data file or ', html.A('Select Files')]),
+                       style={'width': '98%', 'height': '40px', 'lineHeight': '40px', 'borderWidth': '1px',
+                              'borderStyle': 'dashed', 'borderRadius': '5px', 'textAlign': 'center', 'margin': '10px'}
+                       ),
+        ),
         dbc.Row(
             [
                 dbc.Col(html.H4(children='Main Dashboard:',style={'text-decoration': 'underline'}), width=2),
                 dbc.Col(
-                    dcc.Dropdown(id='manufacture-drop', multi=False, options=[{"label": i, "value": i} for i in manufactures],
+                    dcc.Dropdown(id='manufacture-drop', multi=False, options=[{"label": i, "value": i} for i in objects_dict.keys()],
                                  style={'color': '#212121', 'background-color': '#212121'}), width=2),
                 dbc.Col(
                     dcc.Dropdown(id='plant-drop', multi=False, options=[{"label": i, "value": i} for i in plant],

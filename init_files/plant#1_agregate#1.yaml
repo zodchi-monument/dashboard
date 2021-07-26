@@ -1,0 +1,17 @@
+########################################################################################################################
+Fuel consumption:
+  "type": "Catboost"
+  "pkl": "model1"
+  "bias": False
+  "tags":
+    "input":
+      "manipulated": ["Meteo:T1 [°C]", "Meteo:T2 [°C]", "Meteo:P [mm Hg]", "Meteo:V1 [m/sec]", "Meteo:V2 [m/sec]",
+                      "Meteo:NV:Avarage"]
+      "controled":   ["Pressure:P111",  "Consumption:F4", "Consumption:F5", "Temperature:T11", "Temperature:T12",
+                      "Temperature:T13", "Temperature:T14", "Temperature:T15", "Consumption:F1", "Consumption:F2",
+                      "Pressure:P112", "Pressure:P113", "Pressure:P114", "Pressure:P115", "Consumption:F3",]
+    "output": "target_consumption"
+    "use_time": ['hour','day','month','weekday','quarter','is_month_start','is_month_end','is_weekend']
+  "envelope":
+    "output": 0.005
+    "others": 0.001
