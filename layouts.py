@@ -68,8 +68,8 @@ main_dash = \
             ], style={'padding': '20px'}),
         dbc.Row(
             [
-            dbc.Col(dcc.Graph(id='main-graph', figure={'layout': {'height': 220}}), width=10),
-            dbc.Col(dcc.Graph(id='mape-graph', figure={'layout': {'height': 220}}), width=2)
+            dbc.Col(dcc.Graph(id='main-graph', figure={'layout': {'height': 240}}), width=10),
+            dbc.Col(dcc.Graph(id='mape-graph', figure={'layout': {'height': 240}}), width=2)
             ]
         )
 ])
@@ -80,7 +80,7 @@ feature_dash = html.Div([
             dbc.Col(
                 [
                     dbc.Row(html.H4(children='Features graph:',style={'text-decoration': 'underline'}), style={'padding': '20px'}),
-                    dcc.Graph(id='features-graph', figure={'layout': {'height': 190}})
+                    dcc.Graph(id='features-graph', figure={'layout': {'height': 260}})
                 ],
                 width=10),
             dbc.Col(
@@ -88,7 +88,7 @@ feature_dash = html.Div([
                     dbc.Row(html.H4(children='Model features:',style={'text-decoration': 'underline'}), style={'padding': '20px'}),
                     dcc.Checklist(id='features-drop', value=[], labelStyle={'display': 'block'},
                                   options=[{"label": f"\t{i}", "value": i} for i in features],
-                                  style={"overflow-y": "scroll", 'font-size': '16px', "maxHeight": "200px"})
+                                  style={"overflow-y": "scroll", 'font-size': '16px', "maxHeight": "260px"})
                 ],
                 width=2,
             )
@@ -97,7 +97,7 @@ feature_dash = html.Div([
 ])
 
 factor_dash = html.Div([
-        dbc.Row(html.H4(children='Factor analysis:',style={'text-decoration': 'underline'}), style={'padding': '20px'}),
+        dbc.Row(html.H4(children='Factor analysis:', style={'text-decoration': 'underline'}), style={'padding': '20px'}),
         dbc.Col(
             dcc.Graph(id='factor-graph',
                       figure={'layout': {'height': 220}}),
