@@ -1,62 +1,72 @@
 from plotly import graph_objects as go
 from plotly import express as px
-import datetime
+from datetime import datetime
 import pandas as pd
 import numpy as np
 from itertools import cycle
 import random
+import base64
+import io
+
+fact_df, plan_df = pd.read_csv("data/fact.csv"), pd.read_csv("data/plan.csv")
+
+
+def pars_uploaded_file(content, name: str, type: str):
+    global fact_df, plan_df
+    if content:
+        content_type, content_string = content.split(',')
+        decoded = base64.b64decode(content_string)
+
+        a = lambda x: pd.read_csv(io.StringIO(x.decode('utf-8')))
+        if type == "fact":
+            fact_df = a(decoded)
+        else:
+            plan_df = a(decoded)
+        return [name]
+    else:
+        return ['Drag and Drop your FACT-data csv file']
 
 
 def main_graph(model):
-    date_now = datetime.datetime.now()
-    date_start = date_now - datetime.timedelta(hours=72)
-    date_end = date_now + datetime.timedelta(hours=71)
-    timeline = [i for i in pd.date_range(start=date_start, end=date_end, freq='1H')]
+    global fact_df, plan_df
 
-    mock_data = list(np.random.random(72))
-    mock_data = mock_data + [np.mean(mock_data)]*71
-    fact_trace = go.Scatter(x=timeline, y=mock_data,
+    timeline = [datetime.strptime(i, '%d.%m.%Y %H:%M:%S') for i in fact_df["date"].values]
+
+    fact_data = list(fact_df["y_consumption"].values)
+    fact_trace = go.Scatter(x=timeline, y=fact_data,
                             line=dict(color=px.colors.qualitative.Prism[0], width=2, shape='hv'),
                             name='Фактическое по прибору')
 
-    mock_data = [i/4.0-0.25 for i in mock_data]
-    load_trace = go.Scatter(x=timeline, y=mock_data,
+    load_data = list(fact_df["load"].values)
+    load_trace = go.Scatter(x=timeline, y=load_data,
                             line=dict(color='grey', width=1, shape='hv'),
                             name='Загрузка установки')
 
-    mock_data = list(np.random.random(72))
-    mock_data = mock_data + [np.mean(mock_data)] * 71
-    plan_trace = go.Scatter(x=timeline, y=mock_data,
+    plan_data = list(plan_df["y_consumption"].values)
+    plan_trace = go.Scatter(x=timeline, y=plan_data,
                             line=dict(color=px.colors.qualitative.Prism[1], width=2, dash='dot', shape='hv'),
                             name='Фактическое по модели')
 
     fig = go.Figure(layout=go.Layout(paper_bgcolor='rgba(0,0,0,0.1)',plot_bgcolor='rgba(0,0,0,0)', height=300))
-    fig.add_trace(fact_trace)
-    fig.add_trace(plan_trace)
-    fig.add_trace(load_trace)
-    fig.add_vline(date_now, line_color="white")
-
-    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.add_trace([fact_trace, plan_trace, load_trace])
+    fig.update_xaxes(showgrid=False, zeroline=False,)
     fig.update_yaxes(showgrid=False, zeroline=False)
     fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
                       font_color="white",
                       margin=dict(l=20, r=20, t=20, b=20),)
     return fig
 
+
 def mape_graph(model):
     fact_pie = go.Pie(labels=["План"], values=[1.2334], hole=.85,)
     small_pie = go.Pie(labels=["","Факт", "Дельта"], values=[0, 1.1234, 0.11], hole=.8,
                        domain={'x': [0.1, 0.9], 'y': [0.1, 0.9]},)
 
-    fig = go.Figure(layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)', height=300))
-    fig.add_trace(fact_pie)
-    fig.add_trace(small_pie)
-    fig.update_traces(textinfo='none', marker=dict(colors=[px.colors.qualitative.Prism[0],
-                                                           px.colors.qualitative.Prism[1],
-                                                           px.colors.qualitative.Prism[3]]))
+    fig = go.Figure(layout=go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)', height=300))
+    fig.add_trace([fact_pie, small_pie])
+    fig.update_traces(textinfo='none', marker=dict(colors=[px.colors.qualitative.Prism[0] for i in [0,1,3]]))
 
-    fig.update_layout(showlegend=False,
-                      font_color="white",
+    fig.update_layout(showlegend=False,font_color="white",
                       margin=dict(l=20, r=20, t=20, b=20))
 
     fig.add_annotation(dict(font=dict(color=px.colors.qualitative.Prism[0], size=14),
