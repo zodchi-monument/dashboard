@@ -61,3 +61,16 @@ def update_agg_dropdown(plant_name, agg_name):
     ls = ls.get(agg_name) if ls else None
     ls = [{"label": i, "value": i} for i in ls] if ls else []
     return ls
+
+@app.callback(
+    Output('features-drop', 'options'),
+    Input('plant-drop', 'value'),
+    Input('agg-drop', 'value'),
+    Input('main-drop', 'value'))
+def update_features_drop(plant_name, agg_name, resource):
+    ls = objects_dict.get(plant_name)
+    ls = ls.get(agg_name) if ls else None
+    ls = ls.get(resource) if ls else None
+    ls = ls["manipulated"] + ls["controled"] if ls else None
+    ls = [{"label": i, "value": i} for i in ls] if ls else []
+    return ls

@@ -10,12 +10,8 @@ def get_layout(objects_dict):
                    "Pressure:P112", "Pressure:P113", "Pressure:P114", "Pressure:P115", "Consumption:F3",]
     manipulated = ["Meteo:T1 [°C]", "Meteo:T2 [°C]", "Meteo:P [mm Hg]", "Meteo:V1 [m/sec]", "Meteo:V2 [m/sec]",
                    "Meteo:NV:Avarage"]
-
     features = controlledf + manipulated
-    predictors = [{"label": i, "value": i} for i in features]
-    manufactures = objects_dict.keys()
-    plant = ["Установка №1"]
-    models = ["Потребление топлива", "Потребление тепла", "Выработка тепла"]
+
 
     main_dash = \
         html.Div([
@@ -75,9 +71,9 @@ def get_layout(objects_dict):
                     width=10),
                 dbc.Col(
                     [
-                        dbc.Row(html.H4(children='Model features:',style={'text-decoration': 'underline'}), style={'padding': '20px'}),
+                        dbc.Row(html.H4(children='Model features:', style={'text-decoration': 'underline'}), style={'padding': '20px'}),
                         dcc.Checklist(id='features-drop', value=[], labelStyle={'display': 'block'},
-                                      options=[{"label": f"\t{i}", "value": i} for i in features],
+                                      options=[{"label": f"*Choose the model*", "value": 0}],
                                       style={"overflow-y": "scroll", 'font-size': '16px', "maxHeight": "260px"})
                     ],
                     width=2,
